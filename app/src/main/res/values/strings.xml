@@ -5,4 +5,10 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <string name="facebook_app_id">175078613039661</string>
+    <string name="fb_login_protocol_scheme">fb175078613039661</string>
+    <string name="fb_page_accessToken">EAAZAwxNCVkjkBACFZATZBXFZB9RJkZCM2bBiZAIsufFFJaf7ZBwXpNaYUUAd6ggR2nnz9NKX3F9ZBbMXUcwqFx1f6rUcKWjZB7a5yyY4UavG5L8wIBgOXiTVsODIkNJJJPywOC3o9YZBeZCKHAnanxCZCmPOHJ6MFZBNo0KroyowTc3ld0AZDZD
+</string>
+    <string name="fb_page_id">sanskruthi.2k17</string>
 </resources>
