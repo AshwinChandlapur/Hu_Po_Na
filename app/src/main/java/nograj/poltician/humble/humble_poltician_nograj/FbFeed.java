@@ -15,7 +15,6 @@ public class FbFeed {
     private String full_picture;
     private String type;
     private String description;
-    private String message;
     private String picture;
     private String id;
     private String fromName;
@@ -70,14 +69,6 @@ public class FbFeed {
         this.description = description;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
     public String getPicture() {
         return picture;
     }
@@ -101,7 +92,6 @@ public class FbFeed {
             feed.setFull_picture(resObj.getString("full_picture"));
             feed.setType(resObj.getString("type"));
             feed.setPicture(resObj.getString("picture"));
-            feed.setMessage(resObj.getString("message"));
             feed.setId(resObj.getString("id"));
             feed.setFrom(resObj.getJSONObject("from"));
             feed.setFromId(resObj.getJSONObject("from").getString("name"));
@@ -114,7 +104,6 @@ public class FbFeed {
 
     public String toString(){
         return "{ description : " + getDescription() + "\n" +
-                " message : " + getMessage() + "\n" +
                 " id : " + getId() + "\n" +
                 " full_picture : " + getFull_picture() + "\n" +
                 " picture : " + getPicture() + "\n" +

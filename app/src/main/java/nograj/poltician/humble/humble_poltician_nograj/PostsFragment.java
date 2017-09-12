@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -87,7 +88,7 @@ public class PostsFragment extends Fragment{
     private void  getPostsData () {
         AccessToken aT = null;
         String url = getString(R.string.fb_page_id);
-        String fields = "fields=from,full_picture,via,type,description,message,picture";
+        String fields = "fields=from,full_picture,via,type,description,picture&limit=10";
         if (AccessToken.getCurrentAccessToken() != null){
             aT = AccessToken.getCurrentAccessToken();
         } else {
@@ -112,8 +113,9 @@ public class PostsFragment extends Fragment{
                                 FbFeed feed = FbFeed.fromJSONObj(dataArr.getJSONObject(i));
                                 feeds.add(feed);
                             }
-                            postData.setAdapter(new FeedAdapter(feeds));
                             postData.setLayoutManager(new LinearLayoutManager(getActivity()));
+                            postData.setAdapter(new FeedAdapter(feeds));
+                            postData.setItemAnimator(new DefaultItemAnimator());
                             postData.setVisibility(View.VISIBLE);
                             noPosts.setVisibility(View.GONE);
                         } catch (Exception e) {

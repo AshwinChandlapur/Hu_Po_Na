@@ -24,7 +24,9 @@
                 android:id="@+id/postsData"
                 android:visibility="gone"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="wrap_content"
+                android:scrollbars="horizontal"
+                android:layout_marginBottom="@dimen/feed_item_margin"/>
         </LinearLayout>
     </ScrollView>
 
