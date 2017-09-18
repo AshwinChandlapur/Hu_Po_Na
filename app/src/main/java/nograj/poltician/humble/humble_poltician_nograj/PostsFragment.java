@@ -47,8 +47,8 @@ public class PostsFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
+//            mParam1 = getArguments().getStory(ARG_PARAM1);
+//            mParam2 = getArguments().getStory(ARG_PARAM2);
 //        }
     }
 
@@ -88,7 +88,7 @@ public class PostsFragment extends Fragment{
     private void  getPostsData () {
         AccessToken aT = null;
         String url = getString(R.string.fb_page_id);
-        String fields = "fields=from,full_picture,via,type,description,picture&limit=10";
+        String fields = "fields=created_time,message,description,story,id,type,picture,full_picture,from,likes&limit=10";
         if (AccessToken.getCurrentAccessToken() != null){
             aT = AccessToken.getCurrentAccessToken();
         } else {
@@ -114,7 +114,7 @@ public class PostsFragment extends Fragment{
                                 feeds.add(feed);
                             }
                             postData.setLayoutManager(new LinearLayoutManager(getActivity()));
-                            postData.setAdapter(new FeedAdapter(feeds));
+                            postData.setAdapter(new FeedAdapter(PostsFragment.this, feeds));
                             postData.setItemAnimator(new DefaultItemAnimator());
                             postData.setVisibility(View.VISIBLE);
                             noPosts.setVisibility(View.GONE);

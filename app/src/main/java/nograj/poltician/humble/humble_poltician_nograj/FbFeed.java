@@ -1,16 +1,21 @@
 package nograj.poltician.humble.humble_poltician_nograj;
 
-import com.facebook.GraphResponse;
+import android.util.Log;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by Nikith_Shetty on 10/09/2017.
  */
 
 public class FbFeed {
+    private String message;
+    private String create_time;
+    private String story;
     private JSONObject from;
     private String full_picture;
     private String type;
@@ -18,6 +23,39 @@ public class FbFeed {
     private String picture;
     private String id;
     private String fromName;
+    private String likesCount;
+
+    public String getLikesCount() {
+        return likesCount;
+    }
+
+    public void setLikesCount(String likesCount) {
+        this.likesCount = likesCount;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getCreate_time() {
+        return create_time;
+    }
+
+    public void setCreate_time(String create_time) {
+        this.create_time = create_time;
+    }
+
+    public String getStory() {
+        return story;
+    }
+
+    public void setStory(String story) {
+        this.story = story;
+    }
 
     public String getFromName() {
         return fromName;
@@ -88,14 +126,70 @@ public class FbFeed {
     public static FbFeed fromJSONObj (JSONObject resObj) {
         FbFeed feed = new FbFeed();
         try {
-            feed.setDescription(resObj.getString("description"));
-            feed.setFull_picture(resObj.getString("full_picture"));
-            feed.setType(resObj.getString("type"));
-            feed.setPicture(resObj.getString("picture"));
-            feed.setId(resObj.getString("id"));
-            feed.setFrom(resObj.getJSONObject("from"));
-            feed.setFromId(resObj.getJSONObject("from").getString("name"));
-            feed.setFromName(resObj.getJSONObject("from").optString("name"));
+            if (resObj.has("description")){
+                feed.setDescription(resObj.getString("description"));
+            } else {
+                feed.setDescription("");
+            }
+            if (resObj.has("full_picture")){
+                feed.setFull_picture(resObj.getString("full_picture"));
+            } else {
+                feed.setFull_picture("");
+            }
+            if (resObj.has("type")){
+                feed.setType(resObj.getString("type"));
+            } else {
+                feed.setType("");
+            }
+            if (resObj.has("picture")){
+                feed.setPicture(resObj.getString("picture"));
+            } else {
+                feed.setPicture("");
+            }
+            if (resObj.has("id")){
+                feed.setId(resObj.getString("id"));
+            } else {
+                feed.setId("");
+            }
+            if (resObj.has("from")){
+                feed.setFrom(resObj.getJSONObject("from"));
+                if (feed.from.has("name")){
+                    feed.setFromName(resObj.getJSONObject("from").getString("name"));
+                } else {
+                    feed.setFromName("");
+                }
+                if (feed.from.has("id")){
+                    feed.setFromId(resObj.getJSONObject("from").getString("id"));
+                } else {
+                    feed.setFromId("");
+                }
+            } else {
+                feed.setFrom(null);
+            }
+            if (resObj.has("create_time")){
+                String time = resObj.getString("create_time");
+                feed.setCreate_time(time);
+//                feed.setCreate_time(SimpleDateFormat.getDateInstance().parse(time).toString());
+            } else {
+                feed.setCreate_time("");
+            }
+            if (resObj.has("message")){
+                feed.setMessage(resObj.getString("message"));
+            } else {
+                feed.setMessage("");
+            }
+            if (resObj.has("story")){
+                feed.setStory(resObj.getString("story"));
+            } else {
+                feed.setStory("");
+            }
+            if (resObj.has("likes")){
+                JSONObject likes = resObj.getJSONObject("likes");
+                JSONArray data = likes.getJSONArray("data");
+                feed.setLikesCount(String.valueOf(data.length()));
+            } else {
+                feed.setLikesCount("");
+            }
             return feed;
         } catch (Exception e) {
             return null;
@@ -110,6 +204,9 @@ public class FbFeed {
                 " from : { name : " + getFromName() + "\n" +
                 "          id : " + getFromId() + "\n" +
                 "       } " + "\n" +
+                " message : " + getMessage() + "\n" +
+                " created_time : " + getCreate_time() + "\n" +
+                " story : " + getStory() + "\n" +
                 "}";
     }
 }
