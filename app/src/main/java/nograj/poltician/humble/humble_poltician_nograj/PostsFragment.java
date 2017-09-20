@@ -1,5 +1,6 @@
 package nograj.poltician.humble.humble_poltician_nograj;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -32,6 +33,10 @@ public class PostsFragment extends Fragment{
     private RecyclerView postData;
 
     public PostsFragment() {
+    }
+
+    public onFragmentInteractionListener getActivityInstance(){
+        return mListener;
     }
 
     public static PostsFragment newInstance() {

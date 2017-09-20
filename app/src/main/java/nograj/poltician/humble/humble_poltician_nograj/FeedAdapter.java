@@ -1,5 +1,6 @@
 package nograj.poltician.humble.humble_poltician_nograj;
 
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -15,7 +16,12 @@ import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
+import com.facebook.login.LoginManager;
+import com.facebook.share.model.ShareContent;
+import com.facebook.share.model.ShareHashtag;
+import com.facebook.share.model.ShareLinkContent;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,9 +31,9 @@ import java.util.List;
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder> {
     private String TAG = "FeedAdapter";
     private List<FbFeed> feedList;
-    private Fragment parentFrag;
+    private PostsFragment parentFrag;
 
-    public FeedAdapter (Fragment parent, List<FbFeed> list) {
+    public FeedAdapter (PostsFragment parent, List<FbFeed> list) {
         parentFrag = parent;
         feedList = list;
         Log.e(TAG, "FeedAdapter: " + feedList.size());
@@ -79,16 +85,20 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
                 holder.feedImg.setVisibility(View.GONE);
             }
             Log.e(TAG, "onBindViewHolder: " + feed.getLikesCount());
-            setText(holder.likesCount, feed.getLikesCount());
+//            setText(holder.likesCount, feed.getLikesCount());
+            if (feed.getLikesCount() != null || feed.getLikesCount() != ""){
+                holder.likesCount.setText(feed.getLikesCount() + " Likes");
+            } else {
+                holder.likesCount.setVisibility(View.GONE);
+            }
             holder.likeBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (AccessToken.getCurrentAccessToken() != null) {
                         Log.e(TAG, "onClick: ");
-                        likeObject(feed.getId());
-
+                        likeObject(view, feed.getId());
                     } else {
-//                        LoginManager.getInstance().logInWithReadPermissions(parentFrag, "pro");
+                        parentFrag.getActivityInstance().login();
                     }
                 }
             });
@@ -121,7 +131,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
         return feedList.size();
     }
 
-    private void likeObject(String id){
+    private void likeObject(final View view, String id){
         Log.e(TAG, "likeObject: " + id);
         new GraphRequest(
                 AccessToken.getCurrentAccessToken(),
@@ -131,6 +141,10 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
                 new GraphRequest.Callback() {
                     public void onCompleted(GraphResponse response) {
                         Log.e(TAG, "onCompleted: " + response);
+                        LinearLayout ll = (LinearLayout) view;
+                        TextView text = (TextView)ll.getChildAt(0);
+                        text.setText("Liked");
+                        ll.setClickable(false);
                     }
                 }
         ).executeAsync();
@@ -138,5 +152,10 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
 
     private void shareObject(String id){
         Log.e(TAG, "shareObject: ");
+        ShareLinkContent slc = new ShareLinkContent.Builder()
+                .setContentUrl(Uri.parse("https://www.facebook.com/humblepoliticiannograj/" + id))
+                .setShareHashtag(new ShareHashtag.Builder()
+                        .setHashtag("#humblePoliticianNograj").build())
+                .build();
     }
 }

@@ -1,10 +1,12 @@
 package nograj.poltician.humble.humble_poltician_nograj;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,8 +17,22 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+
+import java.util.Arrays;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, onFragmentInteractionListener {
+
+    private String TAG = "MainActivity";
+    CallbackManager cbManager;
+    AccessTokenTracker accessTokenTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +58,31 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        cbManager = CallbackManager.Factory.create();
+        accessTokenTracker = new AccessTokenTracker() {
+            @Override
+            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
+                Log.e(TAG, "onCurrentAccessTokenChanged: ");
+            }
+        };
+        accessTokenTracker.startTracking();
+        LoginManager.getInstance().registerCallback(cbManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Log.e(TAG, "onSuccess: " + AccessToken.getCurrentAccessToken());
+            }
+
+            @Override
+            public void onCancel() {
+                Log.e(TAG, "onCancel: ");
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Log.e(TAG, "onError: " + error.getMessage());
+            }
+        });
     }
 
     @Override
@@ -107,10 +148,22 @@ public class MainActivity extends AppCompatActivity
         switchFragment(fragment);
     }
 
+    @Override
+    public void login() {
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
+    }
+
     public void switchFragment (Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content_main, fragment);
         fragmentTransaction.addToBackStack(fragment.toString());
         fragmentTransaction.commit();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        cbManager.onActivityResult(requestCode, resultCode, data);
+
     }
 }
