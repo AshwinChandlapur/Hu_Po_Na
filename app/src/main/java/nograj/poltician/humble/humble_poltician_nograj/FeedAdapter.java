@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
@@ -82,6 +83,12 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
             holder.statusMsg.setText(Html.fromHtml(feed.getMessage()));
             setText(holder.timeStamp, feed.getCreate_time());
             if (feed.getFull_picture() != null || feed.getFull_picture() != ""){
+                Glide.with(parentFrag)
+                        .load(feed.getFull_picture())
+                        .asBitmap()
+                        .into(holder.feedImg);
+                holder.feedImg.setVisibility(View.VISIBLE);
+            } else {
                 holder.feedImg.setVisibility(View.GONE);
             }
             Log.e(TAG, "onBindViewHolder: " + feed.getLikesCount());
